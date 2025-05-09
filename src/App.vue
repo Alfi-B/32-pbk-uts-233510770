@@ -1,30 +1,57 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="app-container">
+    <h1>Paket Yang Perlu Diantar</h1>
+    
+    <div class="main-container">
+      <div class="activity-list">
+        <h2>Daftar Paket</h2>
+        <div v-if="daftarKegiatan.length === 0" class="empty-state">
+          <p>Belum ada kegiatan. Silakan tambahkan kegiatan baru!</p>
+        </div>
+        <ul class="kegiatan-list">
+          <li 
+            v-for="(kegiatan, index) in daftarKegiatan" 
+            :key="kegiatan.id"
+            class="kegiatan-item"
+          >
+            <div class="kegiatan-content">
+              <span class="kegiatan-text">{{ kegiatan.teks }}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>To Do List Buatan Alfi Ardiansyah</p>
+    </footer>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<script>
+export default {
+  data() {
+    return {
+      daftarKegiatan: [],
+      lastId: 0
+    }
+  },
+  methods: {
+    muatKegiatan() {
+      const savedKegiatan = localStorage.getItem('daftarKegiatan');
+      const savedId = localStorage.getItem('lastId');
+      
+      if (savedKegiatan) {
+        this.daftarKegiatan = JSON.parse(savedKegiatan);
+      }
+      
+      if (savedId) {
+        this.lastId = parseInt(savedId);
+      }
+    }
+  },
+  mounted() {
+    this.muatKegiatan();
+  }
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+</script>
