@@ -28,7 +28,17 @@
             :class="{ 'animated': animasiIndex === index }"
           >
             <div class="kegiatan-content">
-              <span class="kegiatan-text">{{ kegiatan.teks }}</span>
+              <label class="checkbox-container">
+                <input 
+                  type="checkbox" 
+                  v-model="kegiatan.selesai"
+                  @change="updateKegiatan(kegiatan)"
+                />
+                <span class="checkmark"></span>
+              </label>
+              <span 
+                :class="['kegiatan-text', { 'selesai': kegiatan.selesai }]"
+              >{{ kegiatan.teks }}</span>
             </div>
             <div class="kegiatan-actions">
               <button 
@@ -95,6 +105,10 @@ export default {
           this.animasiIndex = -1;
         }, 300);
       }
+    },
+    
+    updateKegiatan(kegiatan) {
+      this.simpanKegiatan();
     },
     
     simpanKegiatan() {
