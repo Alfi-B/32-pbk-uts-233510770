@@ -25,9 +25,19 @@
             v-for="(kegiatan, index) in daftarKegiatan" 
             :key="kegiatan.id"
             class="kegiatan-item"
+            :class="{ 'animated': animasiIndex === index }"
           >
             <div class="kegiatan-content">
               <span class="kegiatan-text">{{ kegiatan.teks }}</span>
+            </div>
+            <div class="kegiatan-actions">
+              <button 
+                @click="batalkanKegiatan(kegiatan.id)" 
+                class="btn-delete"
+                title="Hapus Kegiatan"
+              >
+                <span>✕</span>
+              </button>
             </div>
           </li>
         </ul>
@@ -46,6 +56,7 @@ export default {
     return {
       daftarKegiatan: [],
       inputKegiatan: '',
+      animasiIndex: -1,
       lastId: 0
     }
   },
@@ -66,7 +77,24 @@ export default {
       this.daftarKegiatan.unshift(newKegiatan);
       this.inputKegiatan = '';
       
+      this.animasiIndex = 0;
+      setTimeout(() => {
+        this.animasiIndex = -1;
+      }, 500);
+      
       this.simpanKegiatan();
+    },
+    
+    batalkanKegiatan(id) {
+      const index = this.daftarKegiatan.findIndex(kegiatan => kegiatan.id === id);
+      if (index !== -1) {
+        this.animasiIndex = index;
+        setTimeout(() => {
+          this.daftarKegiatan.splice(index, 1);
+          this.simpanKegiatan();
+          this.animasiIndex = -1;
+        }, 300);
+      }
     },
     
     simpanKegiatan() {
