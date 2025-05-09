@@ -15,14 +15,32 @@
         </form>
       </div>
 
+      <div class="filter-section">
+        <div class="filter-label"></div>
+        <div class="filter-buttons">
+          <button 
+            @click="showBelumSelesai = false" 
+            :class="['btn-filter', { active: !showBelumSelesai }]"
+          >
+            Semua
+          </button>
+          <button 
+            @click="showBelumSelesai = true" 
+            :class="['btn-filter', { active: showBelumSelesai }]"
+          >
+            Belum Selesai
+          </button>
+        </div>
+      </div>
+
       <div class="activity-list">
         <h2>Daftar Paket</h2>
-        <div v-if="daftarKegiatan.length === 0" class="empty-state">
+        <div v-if="kegiatanTampil.length === 0" class="empty-state">
           <p>Belum ada kegiatan. Silakan tambahkan kegiatan baru!</p>
         </div>
         <ul class="kegiatan-list">
           <li 
-            v-for="(kegiatan, index) in daftarKegiatan" 
+            v-for="(kegiatan, index) in kegiatanTampil" 
             :key="kegiatan.id"
             class="kegiatan-item"
             :class="{ 'animated': animasiIndex === index }"
@@ -66,8 +84,18 @@ export default {
     return {
       daftarKegiatan: [],
       inputKegiatan: '',
+      showBelumSelesai: false,
       animasiIndex: -1,
       lastId: 0
+    }
+  },
+  computed: {
+    kegiatanTampil() {
+      if (this.showBelumSelesai) {
+        return this.daftarKegiatan.filter(kegiatan => !kegiatan.selesai)
+      } else {
+        return this.daftarKegiatan
+      }
     }
   },
   methods: {
@@ -109,6 +137,10 @@ export default {
     
     updateKegiatan(kegiatan) {
       this.simpanKegiatan();
+    },
+    
+    toggleFilter() {
+      this.showBelumSelesai = !this.showBelumSelesai;
     },
     
     simpanKegiatan() {
